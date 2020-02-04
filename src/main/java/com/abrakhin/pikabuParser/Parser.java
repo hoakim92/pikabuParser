@@ -42,15 +42,16 @@ public class Parser implements Runnable {
     public void startParse(String date) throws InterruptedException {
         final List<String> posts = new ArrayList<String>();
         WebDriver driver = getNewWebDriver();
-        driver.get("https://pikabu.ru/" + date);
-        driver.navigate().refresh();
+        driver.get("https://pikabu.ru/best/" + date);
+        System.out.println("https://pikabu.ru/best/" + date);
+//        driver.navigate().refresh();
 
 
         int oldCount = 0;
         int count = getPostsCount(driver);
         posts.addAll(collectPosts(count, oldCount, driver));
 
-        while (true) {
+        while (!isFinish(driver)) {
             oldCount = count;
             count = getPostsSimple(oldCount, driver);
             if (count == 0) {
@@ -62,6 +63,7 @@ public class Parser implements Runnable {
             posts.addAll(collectPosts(count, oldCount, driver));
             System.out.println("Current size of posts " + posts.size());
         }
+        System.out.println("Final size of posts " + posts.size());
     }
 
     public static WebDriver getNewWebDriver() {
@@ -85,7 +87,8 @@ public class Parser implements Runnable {
         System.out.println("Start collecting new posts");
         System.out.println("oldCount: " + oldCount + " count: " + count);
         List<String> posts = new ArrayList<String>();
-        for (WebElement s : driver.findElements(By.className("story")).subList(oldCount, count)) {
+//        for (WebElement s : driver.findElements(By.className("story")).subList(oldCount, count)) {
+        for (WebElement s : driver.findElements(By.className("story"))) {
             if (s.findElements(By.className("story__title-link")).size() > 0) {
                 String href = s.findElement(By.className("story__title-link")).getAttribute("href");
                 articleService.saveArticle(new Article(href));
@@ -97,7 +100,9 @@ public class Parser implements Runnable {
     }
 
     public static int getPostsCount(WebDriver driver) {
-        return driver.findElements(By.className("story")).size();
+        int postsOnPage = driver.findElements(By.className("story")).size();
+        System.out.println("Posts on page "+ postsOnPage);
+        return postsOnPage;
     }
 
     public static int getPostsSimple(int oldCount, WebDriver driver) throws InterruptedException {
@@ -121,6 +126,11 @@ public class Parser implements Runnable {
     }
 
     public static Boolean isFinish(WebDriver driver) {
-        return driver.findElements(By.className("stories-feed__message")).size() > 0;
+        List<WebElement> elements = driver.findElements(By.className("stories-feed__message"));
+        return elements.size() > 0 && elements.get(0).isDisplayed();
+//        int count = driver.findElements(By.xpath("//*[contains(text(), 'Отличная работа, все прочитано! Выберите')]")).size();
+//        System.out.println("Count of storis feed " + count);
+//        return count > 0;
     }
+
 }

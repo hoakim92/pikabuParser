@@ -32,7 +32,7 @@ public class Controller {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MONTH, 0);
         cal.set(Calendar.DAY_OF_MONTH, 1);      // 1st day of month
-        cal.set(Calendar.YEAR, 2011);
+        cal.set(Calendar.YEAR, 2012);
         cal.set(Calendar.HOUR, 0);
         cal.set(Calendar.MINUTE, 0);
         int myMonth = cal.get(Calendar.MONTH);
@@ -42,7 +42,7 @@ public class Controller {
 //            executor.execute(new Parser().setDate(new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime())));
 //            cal.add(Calendar.DAY_OF_MONTH, 1);
 //        }
-        executor.execute(new Parser(articleService).setDate(new SimpleDateFormat("").format(cal.getTime())));
+        executor.execute(new Parser(articleService).setDate(new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime())));
         return "test";
     }
 }
