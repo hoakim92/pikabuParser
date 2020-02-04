@@ -1,0 +1,13 @@
+pg:
+  image: postgres:10.0-alpine
+  ports:
+    - 5432:5432
+  volumes:
+    - pg_data:/var/lib/postgresql/data/pg_data
+  environment:
+    POSTGRES_PASSWORD: example
+    POSTGRES_DB: example
+    POSTGRES_USER: example
+    POSTGRES_HOST: pg.example_net
+    POSTGRES_PORT: 5432
+    PGDATA: /var/lib/postgresql/data/pg_data
